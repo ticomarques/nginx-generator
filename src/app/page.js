@@ -1,65 +1,92 @@
+"use client";
 import Image from "next/image";
+import { use, useState } from "react";
 
 export default function Home() {
+
+  const [domain, setDomain] = useState("");
+  const [porta, setPorta] = useState("");
+
+  let code = `server {
+    server_name ${domain};
+    location / {
+        proxy_pass http://localhost:${porta};
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}`
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="">
+      <div className="isolate">
+         <main>
+            <section id="home" className="relative z-10 pb-28 pt-10">
+               <div className="container">
+                  <div className="-mx-4 flex flex-wrap">
+                     <div className="w-full px-4">
+                        <div>
+                           <div className="mx-auto max-w-[720px] text-center">
+                              <h1 className="mb-4 text-3xl leading-tight font-bold text-black md:text-[45px] dark:text-white">Generate your config file</h1>
+                              <p className="text-body-color-2 mx-auto mb-4 max-w-[620px] text-lg font-medium dark:text-white">Insert all information below to generate your config file.</p>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="w-full px-4 w-100">
+                        <div>
+                            <div className="sm:14 wow fadeInUp dark:bg-dark rounded-md bg-white px-8 py-4" data-wow-delay="0s">
+                              <form>
+
+                                <div className="flex">
+                                  <div className="w-full px-4 w-40">
+                                    <div className="mb-5">
+                                      <label htmlFor="domain" className="text-dark mb-2 block text-sm font-medium dark:text-white">Dominio/subdominio</label>
+                                      <input 
+                                        id="domain" 
+                                        type="text" 
+                                        name="domain" 
+                                        placeholder="Insira seu dominio" 
+                                        className="text-body-color focus:border-primary w-full rounded-md border border-[#E9E9E9]/50 bg-transparent px-5 py-3 text-base font-medium outline-hidden dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                                        onChange={(e)=>{setDomain(e.target.value)}} 
+                                      />
+                                    </div>
+
+                                    <div className="mb-5">
+                                      <label htmlFor="porta" className="text-dark mb-2 block text-sm font-medium dark:text-white">Porta</label>
+                                      <input id="porta" 
+                                          type="text" 
+                                          name="porta" 
+                                          placeholder="Insira número da porta" 
+                                          className="text-body-color focus:border-primary w-full rounded-md border border-[#E9E9E9]/50 bg-transparent px-5 py-3 text-base font-medium outline-hidden dark:border-[#E9E9E9]/20 dark:bg-white/5" 
+                                          onChange={(e)=>{setPorta(e.target.value)}}  
+                                        />
+                                    </div>
+                                  </div>
+
+                                  <div className="w-full px-4 w-40 h-[230px]">
+                                    <pre className="p-3 text-xs">
+                                      <code>
+                                        {code}
+                                      </code>
+                                    </pre>
+                                  </div>
+                                </div>
+
+                                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate</button>
+                              </form>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+               </div>
+               <div className="absolute left-0 top-0 -z-10 h-full w-full opacity-20" style={{backgroundImage: "linear-gradient(rgb(62, 125, 255) 0%, rgba(62, 125, 255, 0) 100%)"}}></div>
+               <img alt="shape" loading="lazy" width="411" height="276" decoding="async" data-nimg="1" className="absolute left-0 top-0 -z-10" src="hero-shape-1.svg" style={{color: "transparent"}} />
+               <img alt="shape" loading="lazy" width="820" height="692" decoding="async" data-nimg="1" className="absolute right-0 top-0 -z-10" src="hero-shape-2.svg" style={{color: "transparent"}} />
+            </section>
+         </main>
+      </div>
     </div>
   );
 }
