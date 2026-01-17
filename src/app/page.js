@@ -1,13 +1,15 @@
 "use client";
-import Image from "next/image";
 import { use, useState } from "react";
 
 export default function Home() {
 
+  const [tipo, setTipo] = useState("");
+  const [folder, setFolder] = useState("");
+
   const [domain, setDomain] = useState("");
   const [porta, setPorta] = useState("");
 
-  let code = `server {
+  let codeDinamico = `server {
     server_name ${domain};
     location / {
         proxy_pass http://localhost:${porta};
@@ -15,6 +17,18 @@ export default function Home() {
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
+    }
+}`
+
+  let codeEstatico = `server {
+    listen 80;
+    server_name ${domain};
+
+    root ${folder};
+    index index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ =404;
     }
 }`
 
@@ -38,9 +52,32 @@ export default function Home() {
                         <div>
                             <div className="sm:14 wow fadeInUp dark:bg-dark rounded-md bg-white px-8 py-4" data-wow-delay="0s">
                               <form>
+                                
 
                                 <div className="flex">
                                   <div className="w-full px-4 w-40">
+                                    <div className="mb-5">
+                                      <label htmlFor="estatico" className="text-dark mb-2 text-sm font-medium dark:text-white">
+                                      <input 
+                                        id="estatico" 
+                                        type="radio" 
+                                        name="tipo"
+                                        value="estatico" 
+                                        onChange={(e)=>{setTipo("estatico")}} 
+                                      /> Estático  
+                                      </label>
+
+                                      <label htmlFor="dinamico" className="text-dark mb-2 ml-2 text-sm font-medium dark:text-white">
+                                      <input 
+                                        id="dinamico" 
+                                        type="radio" 
+                                        name="tipo"
+                                        value="dinamico"
+                                        onChange={(e)=>{setTipo("dinamico")}}
+                                      /> Dinamico  
+                                      </label>
+                                    </div>
+
                                     <div className="mb-5">
                                       <label htmlFor="domain" className="text-dark mb-2 block text-sm font-medium dark:text-white">Dominio/subdominio</label>
                                       <input 
@@ -48,7 +85,7 @@ export default function Home() {
                                         type="text" 
                                         name="domain" 
                                         placeholder="Insira seu dominio" 
-                                        className="text-body-color focus:border-primary w-full rounded-md border border-[#E9E9E9]/50 bg-transparent px-5 py-3 text-base font-medium outline-hidden dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                                        className="text-body-color text-xsfocus:border-primary w-full rounded-md border border-[#E9E9E9]/50 bg-transparent px-5 py-3 text-base font-medium outline-hidden dark:border-[#E9E9E9]/20 dark:bg-white/5"
                                         onChange={(e)=>{setDomain(e.target.value)}} 
                                       />
                                     </div>
@@ -63,18 +100,30 @@ export default function Home() {
                                           onChange={(e)=>{setPorta(e.target.value)}}  
                                         />
                                     </div>
+
+                                    <div className="mb-5">
+                                      <label htmlFor="folder" className="text-dark mb-2 block text-sm font-medium dark:text-white">Folder</label>
+                                      <input id="folder" 
+                                          type="text" 
+                                          name="folder" 
+                                          placeholder="Insira a pasta do site" 
+                                          className="text-body-color focus:border-primary w-full rounded-md border border-[#E9E9E9]/50 bg-transparent px-5 py-3 text-base font-medium outline-hidden dark:border-[#E9E9E9]/20 dark:bg-white/5" 
+                                          onChange={(e)=>{setFolder(e.target.value)}}  
+                                        />
+                                    </div>
                                   </div>
 
                                   <div className="w-full px-4 w-40 h-[230px]">
-                                    <pre className="p-3 text-xs">
+                                    <p className="py-2">{tipo}</p>
+                                    <pre className="p-4 text-xs bg-gray-100 rounded-lg h-full overflow-auto">
                                       <code>
-                                        {code}
+                                        {tipo === "estatico" ? codeEstatico : codeDinamico}
                                       </code>
                                     </pre>
                                   </div>
                                 </div>
 
-                                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate</button>
+                                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Download file</button>
                               </form>
                             </div>
                         </div>
