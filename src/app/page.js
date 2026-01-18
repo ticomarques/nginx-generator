@@ -126,7 +126,7 @@ export default function Home() {
                                           name="arquivos" 
                                           placeholder="Insira os arquivos na ordem (index.html index.htm index.php)" 
                                           className="text-body-color focus:border-primary w-full rounded-md border border-[#E9E9E9]/50 bg-transparent px-5 py-3 text-base font-medium outline-hidden dark:border-[#E9E9E9]/20 dark:bg-white/5" 
-                                          onChange={(e)=>{setFolder(e.target.value)}}  
+                                          onChange={(e)=>{setArquivos(e.target.value)}}  
                                         />
                                     </div>
                                   ) : null}
