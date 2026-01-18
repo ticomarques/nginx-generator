@@ -3,8 +3,9 @@ import { use, useState } from "react";
 
 export default function Home() {
 
-  const [tipo, setTipo] = useState("");
+  const [tipo, setTipo] = useState("dinamico");
   const [folder, setFolder] = useState("");
+  const [arquivos, setArquivos] = useState("");
 
   const [domain, setDomain] = useState("");
   const [porta, setPorta] = useState("");
@@ -25,7 +26,7 @@ export default function Home() {
     server_name ${domain};
 
     root ${folder};
-    index index.html index.htm;
+    index ${arquivos};
 
     location / {
         try_files $uri $uri/ =404;
@@ -57,7 +58,18 @@ export default function Home() {
                                 <div className="flex">
                                   <div className="w-full px-4 w-40">
                                     <div className="mb-5">
-                                      <label htmlFor="estatico" className="text-dark mb-2 text-sm font-medium dark:text-white">
+                                      <label htmlFor="dinamico" className="text-dark mb-2 text-sm font-medium dark:text-white">
+                                      <input 
+                                        id="dinamico" 
+                                        type="radio" 
+                                        name="tipo"
+                                        value="dinamico"
+                                        onChange={(e)=>{setTipo("dinamico")}}
+                                        defaultChecked
+                                      /> Dinamico  
+                                      </label>
+
+                                      <label htmlFor="estatico" className="text-dark mb-2 ml-4 text-sm font-medium dark:text-white">
                                       <input 
                                         id="estatico" 
                                         type="radio" 
@@ -65,16 +77,6 @@ export default function Home() {
                                         value="estatico" 
                                         onChange={(e)=>{setTipo("estatico")}} 
                                       /> Estático  
-                                      </label>
-
-                                      <label htmlFor="dinamico" className="text-dark mb-2 ml-2 text-sm font-medium dark:text-white">
-                                      <input 
-                                        id="dinamico" 
-                                        type="radio" 
-                                        name="tipo"
-                                        value="dinamico"
-                                        onChange={(e)=>{setTipo("dinamico")}}
-                                      /> Dinamico  
                                       </label>
                                     </div>
 
@@ -90,6 +92,7 @@ export default function Home() {
                                       />
                                     </div>
 
+                                  {tipo === "dinamico" || tipo ==="" ? (
                                     <div className="mb-5">
                                       <label htmlFor="porta" className="text-dark mb-2 block text-sm font-medium dark:text-white">Porta</label>
                                       <input id="porta" 
@@ -100,7 +103,9 @@ export default function Home() {
                                           onChange={(e)=>{setPorta(e.target.value)}}  
                                         />
                                     </div>
+                                  ) : null}
 
+                                  {tipo === "estatico" ? (
                                     <div className="mb-5">
                                       <label htmlFor="folder" className="text-dark mb-2 block text-sm font-medium dark:text-white">Folder</label>
                                       <input id="folder" 
@@ -111,6 +116,21 @@ export default function Home() {
                                           onChange={(e)=>{setFolder(e.target.value)}}  
                                         />
                                     </div>
+                                  ) : null}
+
+                                  {tipo === "estatico" ? (
+                                    <div className="mb-5">
+                                      <label htmlFor="arquivos" className="text-dark mb-2 block text-sm font-medium dark:text-white">Arquivos</label>
+                                      <input id="arquivos" 
+                                          type="text" 
+                                          name="arquivos" 
+                                          placeholder="Insira os arquivos na ordem (index.html index.htm index.php)" 
+                                          className="text-body-color focus:border-primary w-full rounded-md border border-[#E9E9E9]/50 bg-transparent px-5 py-3 text-base font-medium outline-hidden dark:border-[#E9E9E9]/20 dark:bg-white/5" 
+                                          onChange={(e)=>{setFolder(e.target.value)}}  
+                                        />
+                                    </div>
+                                  ) : null}
+                                    
                                   </div>
 
                                   <div className="w-full px-4 w-40 h-[230px]">
